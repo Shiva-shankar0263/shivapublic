@@ -11,9 +11,9 @@ pipeline {
 		     aws configure set default.region ap-southeast-1
          	     aws ecr get-login-password --region ap-southeast-1 | docker login --username AWS --password-stdin 933542948767.dkr.ecr.ap-southeast-1.amazonaws.com
                      docker build -t shivaproject . 
-                     docker tag shivaproject:latest 933542948767.dkr.ecr.ap-southeast-1.amazonaws.com/shivaproject:$(BUILD_NUMBER)
-                     docker push 933542948767.dkr.ecr.ap-southeast-1.amazonaws.com/shivaproject:$(BUILD_NUMBER)
-            	  '''
+                     docker tag shivaproject:latest 933542948767.dkr.ecr.ap-southeast-1.amazonaws.com/shivaproject:latest
+                     docker push 933542948767.dkr.ecr.ap-southeast-1.amazonaws.com/shivaproject:latest
+		     '''
 	     }	         
 	   }
 
