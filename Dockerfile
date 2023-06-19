@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:1
-FROM mcr.microsoft.com/dotnet/sdk:3.17-apline AS build-env
+FROM mcr.microsoft.com/dotnet/sdk:3.1-alpine AS build-env
 
 RUN apk --no-cache upgrade musl
 
@@ -14,7 +14,7 @@ COPY .  ./
 RUN dotnet publish -c Release -o out
 
 # Build runtime image
-FROM mcr.microsoft.com/dotnet/aspnet:3.17-alpine
+FROM mcr.microsoft.com/dotnet/aspnet:3.1-alpine
 
 RUN apk --no-cache upgrade musl
 
