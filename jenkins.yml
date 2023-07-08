@@ -1,0 +1,56 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: "This template will be used to launch jenkins"
+
+Parameters:
+  LatestUbuntuAMI:
+    Type: AWS::EC2::Image::Id
+    Default: "ami-04341a215040f91bb"
+  InstanceType:
+    Type: String
+    Default: "t3.small"
+  KeyName:
+    Type: String
+    Default: "seoul"
+  SubnetId:   
+    Type: String
+    Default: "subnet-0d976bc1f357dbf15"
+  SecurityGroupIds:
+    Type: String
+    Default: "sg-0e6f4e701f9f1bfe5"
+
+Resources:   
+  Jenkins:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: !Ref LatestUbuntuAMI
+      KeyName: !Ref KeyName
+      InstanceType: !Ref InstanceType
+      UserData:
+        Fn::Base64: 
+          !Sub |
+            #!/bin/bash
+            echo "Creating Jenkins server"
+            sudo apt-get update -y
+            sudo apt install docker.io -y 
+            sudo usermod -aG docker ubuntu
+            sudo docker pull jenkins/jenkins
+            sudo docker run -itd --name jenkins -p 8080:8080 jenkins/jenkins
+            mkdir Siva_Jenkins
+            cd Siva_Jenkins
+            echo "sucessfully created jenkins" > jenkinsfile
+      BlockDeviceMappings:
+        - DeviceName: /dev/sda1
+          Ebs:
+            VolumeSize: 20
+            VolumeType: gp3
+            Iops: 3000
+            DeleteOnTermination: true          
+      Tags: 
+        - Key: CreatedBy
+          Value: Siva
+      NetworkInterfaces: 
+      - AssociatePublicIpAddress: "true"
+        DeviceIndex: "0"
+        GroupSet: 
+          - !Ref SecurityGroupIds
+        SubnetId: !Ref SubnetId
